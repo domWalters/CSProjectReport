@@ -1,1 +1,9 @@
 \section{Evaluative Testing}
+\subsection{Invalid Screener Fields - Problem}
+Immediately upon trying to contextualise the results of my algorithm, I noticed a further point of concern. Amongst the elements of the proposed screeners were entries where the boolean switch was on, but the data in the screener made no sense. \newline
+
+One such example was the field representing (cite a field name that obeys the next line). This field can only be represented by positive numbers, and yet the screener was optimising it to be negative. My interpretation of this is that by optimising the field to be effectively non existent the algorithm is forcing the value of the field to be ignored even though the boolean switch still designates the field as relevant. This should be taken into account when the boolean switches are flipped. \newline
+
+During initialisation I create a vector of the upper and lower limits of each field - across the entire training data set - which I use to randomly generate chromosomes that are in a loose sense ``valid''. I can reuse these limits to turn off the fields which have become invalid during optimisation. \newline
+
+\subsection{Invalid Screener Fields - Testing}

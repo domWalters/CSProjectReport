@@ -1,7 +1,7 @@
 \section{Prerequisite Knowledge}
-Before I discuss the implementation of my proposal I feel that it is necessary to develop some shared terminology which I can draw from in later sections, without having to redefine words on the fly. 
+Before I discuss the implementation of my proposal I feel that it is necessary to develop some shared terminology which I can draw from in later sections, without having to define words on the fly. 
 \subsection{Genetic Algorithms}
-The concept of a Genetic Algorithm (also called an Evolutionary Algorithm) originates - as much of modern Computer Science does - with Alan Turing \cite{turingImitation}. He proposed a schema for a ``learning machine'' which borrowed from the ideas of Darwinian Natural Selection, to learn by a process that would be `` more expeditious than evolution''.
+The concept of a Genetic Algorithm (also called an Evolutionary Algorithm) originates - as much of modern Computer Science does - with Alan Turing \cite{turingImitation}. He proposed a schema for a ``learning machine'' which borrowed from the ideas of Darwinian Natural Selection, to learn by a process that would be ``more expeditious than evolution''.
 
 \subsubsection{Structure} \label{Structure}
 Classical Genetic Algorithms share a common structure:
@@ -23,34 +23,39 @@ Classical Genetic Algorithms share a common structure:
 
 This structure is left intentionally vague as each stage of the algorithm can be designed and tailored to the form of the search space on which it is searching. \newline
 
-For example, a GA that is searching some 3D surface in an optimisation problem for the highest point could use a ``linear average crossover'' where for two points $(x_{1}, y_{1})$ and $(x_{2}, y_{2})$ the new point created by their crossover would be $(\frac{x_{1} + x_{2}}{2}, \frac{y_{1} + y_{2}}{2})$. This method of crossover is only valid when the search space being considered is a 2D Cartesian grid and could not be used, or even defined, on prospective solutions to the MAXSAT problem where the search space consists of boolean/binary variables.
+For example, a GA that is searching some 3D surface in an optimisation problem for the highest point could use a ``linear average crossover'' where for two points $(x_{1}, y_{1})$ and $(x_{2}, y_{2})$ the new point created by their crossover would be $(\frac{x_{1} + x_{2}}{2}, \frac{y_{1} + y_{2}}{2})$. This method of crossover is only valid when the search space being considered is a Cartesian grid and could not be used, or even defined without the use of specialist functions, on prospective solutions to the MAXSAT problem where the search space consists of boolean/binary variables.
 
 \subsubsection{Population} \label{Population}
 The population in a GA refers to the set of potential solutions that are being manipulated in a specified generation. All populations contain the same number of members, no matter which generation they represent, and can contain the same unique member numerous times.
 
+\subsubsection{Phenotypes} \label{chromosome}
+Each member of the population is called a phenotype. This borrows from the biological terminology for evolution on which the algorithm is based. There is a wide variety of synonyms that may be used in place of phenotype: member, candidate, solution, and element to name a few. \newline
+
+The word genotype is also defined in the world of genetic algorithms (also called chromosome, a word closely associated to phenotype). A genotype is a set of properties, whereas a phenotype is a specific set of ``values'' for those properties. In a crude example, if having ginger hair were a boolean property that would be a genotype, whereas the specific 0 or 1 value of this property for a single person would be a phenotype.
+
 \subsubsection{Initialisation} \label{Initialisation}
-Initialisation is the process of generating the first population of the GA. This is usually done completely at random.
+Initialisation is the process of generating the first population of the GA. This is usually done completely at random. This initialisation method should ideally ensure that every initial member that it generates is feasible within the problem that is being solved.
 
 \subsubsection{Selection} \label{Selection}
-Selection is the process of pulling ``fit'' members out of the population that are then handed to the Crossover function. \newline
+Selection is the process of pulling ``fit'' members out of the population that are then handed to the Crossover function. In general, a Selection method should choose members that are ``fitter'' than the average member of the population. \newline
 
-In general, a Selection method should select members that are ``fitter'' than the average member of the population.
+One of the most elegant selection methods - in my opinion - is k-tournament selection, where k chromosomes within the population are randomly selected into a temporary pool. The one with the highest fitness function value wins the tournament and is selected.
 
 \subsubsection{Fitness Function} \label{Fitness}
-The function by which ``fitness'' is ascribed to each member of the population. This should 
+The function by which ``fitness'' is ascribed to each member of the population. This should be high for solutions that are considered ``good'', and low for solutions considered ``bad''. For two chromosomes $c_1$ and $c_2$, with fitness values $f_1$ and $f_2$, if $f_1 > f_2$ then $c_1$ is considered a better solution than $c_2$. 
 
 \subsubsection{Crossover} \label{Crossover}
 The process of creating a new candidate solution from two currently existing ones. This should occur in such a way that on average the new child solution is ``fitter'' than it's parents. \newline
 
-This can be very simple for basic search spaces (the linear average crossover suggested in \ref{Structure}), or highly non-trivial when considering exotic search spaces, such as the space of feasible stock screeners.
+This can be very simple for basic search spaces (the linear average crossover suggested in \ref{Structure}), or highly non-trivial when considering more exotic search spaces.
 
 \subsubsection{Mutation} \label{Mutation}
-The process of randomly causing a solution to change. This often occurs with very low probability. \newline
+The process used to randomly cause a solution to change. This normally occurs with very low probability. \newline
 
-Mutation is useful when the algorithm gets stuck in a local optimum. By randomly changing the solution, it can be forced to re-optimise from somewhere new and potentially find a different local optimum.
+This process is required to prevent the algorithm from getting stuck in a local optima. By randomly changing the solution, the solution can be forced out of the local optima and - by reoptimising - potentially find a different local optima.
 
 \subsection{CSV Files}
-CSV files are a file format for spreadsheets where each field is a string. More specifically no formulae are allowed in a CSV file; it must be a static document.
+CSV files are a file format for spreadsheets where each field is a string. This means that no formulae are allowed in a CSV file; it must be a static document.
 
 \subsubsection{Header}
 The header is the first row of the spreadsheet. This normally consists of column titles for the remaining data.
@@ -63,4 +68,4 @@ Fields are the individual cells within each row/record.
 
 \subsection{Stocks}
 \subsubsection{Screeners}
-A stock screener is a list of variables with specific values, each of which represents some intrinsic property of a company. When a company's version of these variables is strictly larger, this is an indication to strongly consider purchasing that company's stock. (REWORD)
+A stock screener is a list of variables with specific values, each of which represents some intrinsic property of a company. When the difference between the companies current day list of these variables and the screener is positive for all of the variables, this is an indication to strongly consider purchasing that company's stock. In pseudo code 
