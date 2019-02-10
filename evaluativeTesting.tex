@@ -2,8 +2,10 @@
 \subsection{Invalid Screener Fields - Problem}
 Immediately upon trying to contextualise the results of my algorithm, I noticed a further point of concern. Amongst the elements of the proposed screeners were entries where the boolean switch was on, but the data in the screener made no sense. \newline
 
-One such example was the field representing (cite a field name that obeys the next line). This field can only be represented by positive numbers, and yet the screener was optimising it to be negative. My interpretation of this is that by optimising the field to be effectively non existent the algorithm is forcing the value of the field to be ignored even though the boolean switch still designates the field as relevant. This should be taken into account when the boolean switches are flipped. \newline
+One such example was the field representing (cite a field name that obeys the next line). The screener was optimising this field to be really small, so small in fact that it only filtered out a single digit number of stocks out of the 5000 that I had at this time. My interpretation of this is that by optimising the field to be almost non existent the algorithm is forcing the value of the field to be effectively ignored even though the boolean switch still designates the field as relevant. This should be taken into account when the boolean switches are flipped. \newline
 
-During initialisation I create a vector of the upper and lower limits of each field - across the entire training data set - which I use to randomly generate chromosomes that are in a loose sense ``valid''. I can reuse these limits to turn off the fields which have become invalid during optimisation. \newline
+I fixed this by - at initialisation - creating a sorted vector of all of the training data samples for each column, and ensuring that any prospective field in the screener filters out at least 0.1\% of the training data. This ensures a small level of relevance for each field in the screener. \newline
+
+A further concern I have is that the result of the algorithm (the screener it provided) would often contain a large number of fields, and would only buy very few stocks (as well as very specific stocks). I have attempted to rectify this by making the payoff of each screener linearly dependent on both the screeners length (larger length, smaller payoff) and the length of the stocks purchased list (larger length, larger payoff).
 
 \subsection{Invalid Screener Fields - Testing}
