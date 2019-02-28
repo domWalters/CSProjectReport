@@ -1,11 +1,40 @@
-\section{Evaluative Testing}
-\subsection{Invalid Screener Fields - Problem}
-Immediately upon trying to contextualise the results of my algorithm, I noticed a further point of concern. Amongst the elements of the proposed screeners were entries where the boolean switch was on, but the data in the screener made no sense. \newline
+\section{Contexualising the screens} \label{contextualising}
+Once my system was functional, I set about trying to contextualise to myself exactly what the prospective screens that it was optimising towards meant in a financial context, and whether they were sensible. I immediately ran into an assortment of issues.
+
+\subsection{Invalid Screener Fields} \label{invalidField}
+Among the elements of the proposed screeners were entries where the boolean switch was on, but the data in the screener made no sense. \newline
 
 One such example was the field representing (cite a field name that obeys the next line). The screener was optimising this field to be really small, so small in fact that it only filtered out a single digit number of stocks out of the 5000 that I had at this time. My interpretation of this is that by optimising the field to be almost non existent the algorithm is forcing the value of the field to be effectively ignored even though the boolean switch still designates the field as relevant. This should be taken into account when the boolean switches are flipped. \newline
 
 I fixed this by - at initialisation - creating a sorted vector of all of the training data samples for each column, and ensuring that any prospective field in the screener filters out at least 0.1\% of the training data. This ensures a small level of relevance for each field in the screener. \newline
 
-A further concern I have is that the result of the algorithm (the screener it provided) would often contain a large number of fields, and would only buy very few stocks (as well as very specific stocks). I have attempted to rectify this by making the payoff of each screener linearly dependent on both the screeners length (larger length, smaller payoff) and the length of the stocks purchased list (larger length, larger payoff).
+A further concern I have is that the result of the algorithm (the screener it provided) would often contain a large number of fields, and would only buy very few stocks (as well as very specific stocks). I have attempted to rectify this by making the payoff of each screener dependent on both the screeners length and the length of the stocks purchased list. GRAPH BOTH OF THESE FUNCTIONS.
 
-\subsection{Invalid Screener Fields - Testing}
+\subsection{The Empty Screen}
+Further to the above concern, I also noticed that many of the Player objects - when the algorithm terminated - were using ``the empty screen''; the screen where every element is turned off. This is potentially detrimental to the efficacy of the algorithm, as this effectively means that the population is shrinking over time. \newline
+
+To prevent this, I am ensuring that the resultant Player created from the selection-crossover-mutation chain has at least one field turned on. The algorithm simply loops through repeatedly creating more ``children'', until it generates a descendent with at least one field.
+
+\subsection{Using price to optimise price}
+I anticipated early in the project that I would run into an issue where prospective screeners relied on past stock price to predict future stock price. It is widely accepted in the stock trading world that this is not a good practice - past stock trends don't influence future trends. SOURCE THIS PROBABLY \newline
+
+I elected to add a list of ``banned'' fields, so that when the algorithm initially starts, these fields are initialised to be unused and therefore ignored by the algorithm.
+
+\subsection{Overfitting}
+A concern that permeates all of the machine learning disciplines is that of overfitting. Usually caused when the algorithm is repeatedly trained on the same data set, the machine no longer simply learns the trends of the data but instead memorises the actual data itself. This damages the predictive power of the algorithm, as it will no longer be able to sufficiently characterise data that it hasn't seen before. I have implemented two major measures to avoid overfitting.
+
+\subsubsection{Partitioning} \label{partition}
+I randomly partition my data set each time the algorithm runs into k+1 parts, where k is the number of iterations of the algorithm performed for the purpose of eliminating fields (see Ch. \ref{testingConsequences}). This allows each iteration to use a distinct data set, and then leaves one to be used to evaluate the results.
+
+\subsubsection{Resetting on iteration} \label{iterReset}
+After each iteration, the Players each have their screener reset to a random valid value, whilst the fields used parameter is unaffected. This is to prevent cases where a screen wouldn't change much through one iteration of the algorithm, and then would go into the next having already been optimised and begin to overfit. \newline
+
+Additionally, when fields are removed by the algorithm the search space changes. This new search space will be larger than the current one, so screeners that have already optimised will miss out on this new area to search unless they are reset.
+
+\subsection{Percentile Vs Raw Floats}
+A suggestion made to me by Shan, was that my search space was almost certainly too large. By using floating point numbers with huge ranges (in the case of some fields from negative billions to positive billions), I am considering a search space that is far too large to optimise over. \newline
+
+He made the suggestion that instead of using practically infinitely complex floating point data, I should simplify the problem to create and use integer percentiles for each field. By making this change, each field has a much smaller range of values that it can take and can search more effectively. It also lowers the impact of incredibly high/low values.
+
+\subsection{Upper Limits}
+A decision I made early on in the design process was to only allow the Screener to consist of lower bounds on each field. Every rule it optimised was of the form ``field \textgreater \, lower\_bound''. I made this decision for simplicity sake in early development. Now that my system is functional, I can add the case for the upper limit ``field \textless \, upper\_bound''. \newline

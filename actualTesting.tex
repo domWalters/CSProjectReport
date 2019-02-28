@@ -1,0 +1,26 @@
+\section{Testing}
+
+In order to obtain results that I can evaluate from my algorithm, I am running it with different percentile spreads and 5 times with each of them. At the end of each run I save the entire population with their payoff per year, and select the best one. \newline
+
+The reason I am opting to test at multiple percentile sizes is due to the massive change in search space that can occur depending on which one you use. For example, taking a percentile size of 1 means that each rule can have a value from [1, 2, .., 99]. There are $\approx$ 130 rules; they can be \textless or \textgreater (2 options), and on or off (2 options). Therefore, the corresponding search space size will have an upper bound of $2 \cdot 2 \cdot 99^{130} > 10^{260}$, which is monumental. \newline
+
+Taking a percentile size of 5 instead results in a search space with an upper bound of $2 \cdot 2 \cdot19^{130} > 10^{166}$, a number that is still monumental but far smaller than the first case. I would like to test whether this change in search space size impacts the efficacy of the algorithm, which I believe will be the case. \newline
+
+The percentile sizes that I have chosen are:
+\begin{itemize}
+    \item 1s - All data and rules are from the set of percentiles \{1, 2, 3, ..., 99\}.
+    \item 2s - All data and rules are from the set of percentiles \{2, 4, 6, ..., 98\}.
+    \item 4s - All data and rules are from the set of percentiles \{4, 8, 12, ..., 96\}.
+    \item 5s - All data and rules are from the set of percentiles \{5, 10, 15, ..., 95\}.
+    \item 10s - All data and rules are from the set of percentiles \{10, 20, 30, ..., 90\}.
+\end{itemize}
+
+\subsection{Percentile Gap 1}
+
+\subsection{Percentile Gap 2}
+
+\subsection{Percentile Gap 4}
+
+\subsection{Percentile Gap 5}
+
+\subsection{Percentile Gap 10}

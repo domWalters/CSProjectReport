@@ -1,0 +1,59 @@
+\section{Implementation after Contextualisation Changes}
+I made many substantial changes to my algorithm as a result of Section \ref{contextualising}. The largest of which (changing to percentiles) required me to generalise my code to work for floating point numbers and integers simultaneously. This required the creation of a ``trait'' (in Java this would be called an Interface) that would be valid for both floats and integers, and would allow the creation of the objects I had previously defined, except now with either floats or integers. \newline
+
+For the sake of brevity and clarity, I have omitted this from the following list. I still have 6 core objects, however several elements of these objects have either moved (fields\_used vector from Player is now in Screener) or have been made more complex (Player payoff has become spend and return):
+
+\begin{itemize}
+    \item \bf Screener \rm - A vector of arbitrary length containing a tuple representing (field\_value, field\_used, \textless or \textgreater). This is the core data structure that will be used to hold the proposed screening rules that get passed through the algorithm. These can be float or integer, upper or lower bounds, and can be on or off.
+    \item \bf Player \rm - A struct containing:
+    \begin{itemize}
+        \item[$\ast$] A Screener to be used as the screening strategy throughout the game.
+        \item[$\ast$] A float representing the total spend by the screening strategy.
+        \item[$\ast$] A float representing the total return made by the screening strategy.
+        \item[$\ast$] A vector of DataRecords representing the stocks that were bought but not sold over the course of the game, tagged with their buy price.
+        \item[$\ast$] A vector of DataRecords representing the stocks that were sold over the course of the game, tagged with their buy and sell prices.
+    \end{itemize}
+    This object represents a strategy as it passes through a run of the game. At the end, it has a list of stocks that it bought and sold, as well as the spend and return from buying these stocks. This is then used during the generation of the next population.
+    \item \bf DataRecord \rm - A vector of arbitrary length containing floats or integers, along with an ID for this vector, and an iteration number. This is the core data structure that is used to hold the training data. Each one is a snapshot of a large number of fundamental statistics for a specific business at the end of a specific quarter. The data is only used during the iteration specified by the vector (see \ref{partition}).
+    \item \bf Quarter \rm - A vector of arbitrary length containing DataRecords. This object contains a section of the historical training data, specifically every DataRecord for a given quarter of a given year. It contains a selection of functions that allow Players to buy and sell stocks.
+    \item \bf Quarters \rm - A vector of arbitrary length containing Quarter objects. This object contains every quarter that the algorithm is allowed to optimise over. It also retains a list of the field names.
+    \item \bf Game \rm - A struct containing:
+    \begin{itemize}
+        \item[$\ast$] A vector of arbitrary length containing all of the current players.
+        \item[$\ast$] A Quarters object over the initial floating point training data.
+        \item[$\ast$] A Quarters object over the percentile transformed training data.
+        \item[$\ast$] A variety of variables that track the current game state.
+    \end{itemize}
+        This object represents the game itself, and the associated population of players. It has functions that perform iterations of the game, generate the next population, reset the game, etc.
+\end{itemize}
+
+At this point I believe my algorithms output makes full sense, and I am ready to begin actual testing.
+
+\subsection{Rough Pseudocode}
+
+\begin{enumerate}
+    \item \bf Initialisation \rm - Generate initial population $gen_{0}$.
+    \item \bf Ratio \rm = 0.6.
+    \item For i from \{1, .., 5\}
+    \begin{enumerate}
+        \item For g from \{1, .., 20\}
+        \begin{enumerate}
+            \item Create blank population $gen_{g}$
+            \item For n from \{1, .., size of $gen_{g-1}$\}
+            \begin{enumerate}
+                \item Play through $\approx$ 10 years of the stock trading game, buying stocks that match by \bf Ratio \rm or more.
+                \item \bf Selection \rm - Select two members of $gen_{g-1}$ by k = 3 tournament selection twice, using the payoff calculated during the game as the fitness function.
+                \item \bf Crossover \rm - Create a new member by linear average crossover of the two selected members.
+                \item \bf Mutation \rm - Mutate the new member, on average changing one rule per screen.
+                \item Add the new member to $gen_{g}$.
+            \end{enumerate}
+        \end{enumerate}
+        \item For n from \{1, .., size of $gen_{g}$\}
+        \begin{enumerate}
+            \item Using several methods (see \ref{testingConsequences} and \ref{invalidField}), eliminate the fields that aren't relevant from n.
+            \item Reset the rule values in n (see \ref{iterReset}).
+        \end{enumerate}
+        \item \bf Ratio \rm += 0.1.
+    \end{enumerate}
+    \item Return $gen_{G}$
+\end{enumerate}
