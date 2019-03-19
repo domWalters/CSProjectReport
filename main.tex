@@ -4,17 +4,22 @@
 \usepackage{natbib}
 \usepackage{url}
 \usepackage{amssymb}
+\usepackage[superscript,biblabel]{cite}
 
-\title{A Genetic Algorithm to design and optimise Screening Strategies to be utilised in profitable automatic stock trading}
+\title{An Investigation into the use of Genetic Algorithms to design and optimise Screening Rules to be used in  automatic stock trading}
 \author{Dominic Walters}
 \date{ }
 
-\renewcommand*\contentsname{Table of Contents}
+\renewcommand*\contentsname{}
+\setcounter{section}{-1}
 
 \begin{document}
 \maketitle
+\vspace{-20mm}
 \tableofcontents
 
+\include{abstract}
+\include{introduction}
 \include{proposal}
 \include{literatureRev}
 \include{prerequisiteKnowledge}
@@ -24,7 +29,9 @@
 \include{evaluativeTesting}
 \include{implementationThree}
 \include{actualTesting}
+\include{appendix}
 
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
+%\bibliographystyle{plain}
 \bibliography{bibliography}
 \end{document}

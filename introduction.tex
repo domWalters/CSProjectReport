@@ -1,0 +1,43 @@
+\section{Introduction}
+\subsection{The Stock Market}
+The stock market is ubiquitous within modern life. Any time you look at the news, it will be featured. References to stock indices such as the NASDAQ Composite, FTSE 100, Dow Jones, or the S\&P 500 permeate any discussion of the western economy in the modern day, and yet very few people actually interact directly with the market. \newline
+
+The average person doesn’t buy stocks, the closest they get is investing in an ISA through their bank (and not even all ISAs invest in stocks). The prevailing reason for this is that it is simply too difficult to participate in  stock trading and make a reasonable return, as a casual investor. The average person doesn’t understand the majority of the statistics behind stock trading, and they don't understand the basics of when to buy and when to sell. \newline
+
+This is where stock screeners come in; they provide a simple way to filter out stocks that are wholly inappropriate to invest in. However, a large amount of currently widely used screening strategies are years (if not decades) old, raising doubts as to their efficacy. Could the generation of newer, more up to date screening rules be automated? And if so, would these automatically generated rules perform to a competitive standard in the modern market?
+
+\subsection{Generating Screening Rules}
+I suggest an investigation into the efficacy of creating an algorithm that generates profitable stock screening rules, by utilising evolutionary machine learning techniques. This algorithm would run over as much historical data as possible, and provide new screening strategies that are as up to date as the data it uses. \newline
+
+Such an algorithm would allow traders (both casual and professional) to remain up to date with current market trends, as the screening rules would adapt to changes in the economy over time. If a strategy begins to perform poorly, a new one can be automatically generated to replace it.
+
+Generating valid screening strategies would be the logical first step, but once generated how can a value be assigned to these strategies?
+
+\subsection{Measuring Effectiveness}
+\subsubsection{Playing the Stock Market Game}
+A screening rule is only as good as the return that it obtains on the stocks that it purchases. As such, the most natural way to evaluate a screening rule is to see what yearly return it gets on the stocks that it suggests should be purchased. There are a variety of choices to be made here:
+\begin{itemize}
+    \item When should the strategy choose to sell the stocks that it purchases?
+    \vspace{-2mm}
+    \item What should be done if a prospective stock doesn't provide a field that the strategy requires?
+    \vspace{-2mm}
+    \item Over what time period should the rule be evaluated?
+    \vspace{-2mm}
+    \item What data should be used in this evaluation?
+\end{itemize}
+
+However, once these choices are made and a value assigned to each strategy, how can these values be contextualised with regards to actual stock trading returns in the real world? What does it mean to achieve a ``good'' return?
+
+\subsubsection{Market Indices}
+One of the simplest and most risk-free ways to invest your money in the real world is to buy an index fund. An index fund is a stock portfolio that is constructed to track a prominent market index. Such market indices include the aforementioned NASDAQ Composite, Dow Jones, and S\&P 500 from the American market, and the variety of FTSE indices from the UK market. \newline
+
+A market index is a portfolio of stocks that are used to measure some specific section of the market. For example, the 3 most often used American indices: 
+
+\begin{itemize}
+    \item \bf Dow Jones \rm - The Dow represents the value of 30 large, publicly owned businesses within the United States. These businesses are chosen by a committee. The index value is the amount of money required, in dollars, to purchase one stock from each of the 30 companies.
+    \item \bf NASDAQ Composite \rm - The NASDAQ Composite represents a market-capitalisation-weighted value of all of the companies traded on the NASDAQ stock exchange, of which there are approximately 3,300.
+    \item \bf S\&P 500 \rm - The S\&P 500 represents the market-capitalisation-weighted value of 500 specific American companies. These companies are selected by a committee based on a set of 8 criteria including:  market capitalization, financial viability, and the length of time that they have been publicly traded.
+\end{itemize}
+
+Of these three, the S\&P 500 is considered the best representation of the US Stock Market. \cite{snp500Best} \newline
+

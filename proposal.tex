@@ -1,13 +1,5 @@
 \section{Initial Proposal}
-\subsection{Introduction}
-The stock market is ubiquitous within modern life. Any time you look at the news, it will be featured. References to NASDAQ, the FTSE 100, Dow Jones, or the S\&P 500 permeate any discussion of the economy in the modern day, and yet very few people actually interact directly with them. \newline
-
-The average person doesn’t buy stocks, the closest they get is investing in an ISA through their bank (and not even all ISAs invest in stocks). The prevailing reason for this is that it is simply too difficult to participate casually in it. The average person doesn’t understand the majority of the statistics behind stock trading, and they don't understand the basics of when to buy or sell. \newline
-
-This is where stock screeners come in, they provide a simple way to filter out stocks that are inappropriate to invest in. However, a large amount of currently used screening strategies are years (if not decades) old, calling their efficacy into question. Could these screeners be optimised in some way? \newline
-
-I propose a method to create new stock screeners (and optimise old ones), by using machine learning techniques. This will allow the screeners to be updated at any point, by simply running the algorithm again. This means that the screener can’t become “outdated” due to changes in the economy, in the same way, that human-designed screeners potentially can.
-
+\subsection{THIS IS BEING REWRITTEN AS INTRODUCTION.TEX}
 \subsection{Project Layout}
 The project can be split into 4 parts, the last of which is a stretch goal.
 
@@ -27,7 +19,7 @@ The core of the project. The standard genetic algorithm is split into four core 
 \item Repeat step 2, N times, then terminate and return the best screening strategy in the final population.
 \end{itemize}
 
-This area of the project will require experimentation, as the crossover and selection methods will need to be specially designed. The crossover function is going to be the hardest element to construct. It has to allow a combination of two screening rules of potentially several hundred variables each, all representing different aspects of a stock with different scales and potentially wildly different values, in such a way that the result will on average be a better screen. This isn’t trivial.
+This area of the project will require experimentation, as the crossover and selection methods will need to be specially designed. The crossover function is going to be the hardest element to construct. It has to allow a combination of two screening rules of potentially several hundred variables each, all representing different aspects of a stock with different scales and potentially wildly different values, in such a way that the result will on average be a better screen. This is potentially not a trivial function to design.
 
 \subsubsection{Testing and Experimentation}
 After the algorithm is complete, the algorithm’s variables can be varied to attain the best screening rule possible. By running the algorithm multiple times, several candidate screens can be obtained and then evaluated individually by replaying the game over a variety of time frames. \newline
