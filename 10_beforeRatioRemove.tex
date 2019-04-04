@@ -1,0 +1,126 @@
+\section{Testing - Do the Screeners make sense?}
+To clarify whether the Screeners that I'm getting make sense, it is necessary to understand what each of the fields in the training data mean in a business context. To accomplish this, I ran the program a number of times with different variable settings and picked the best screeners that I saw to analyse. \newline
+
+I went through each field in turn to check that none of them contradict, and that each screen would be reasonable to apply (for example, the screener doesn't prefer low values in fields where high values are strictly better). For a full explanation of each of the terms in the following section, see \ref{intrinioFields} in the Appendix.
+
+\subsection{Screen One}
+The first screen with a payoff of 4.83\% was:
+\begin{enumerate}
+    \item (adjweightedavebasicdilutedsharesos, Gt, 40) - The screen prefers companies with a large number of shares.
+    \item (ebitlesscapextointerestex, Lt, 56) - Preference for this field to be low could be for either of two reasons:
+    \begin{itemize}
+        \item The screen prefers high CapEx compared to Earnings before Interest, and Tax. This would indicate a preference to businesses that reinvest a lot of their earnings.
+        \item The screen prefers large interest expenses. This would indicate a preference to businesses that have a comparatively large amount of debt.
+    \end{itemize}
+    \item (ebitqoqgrowth, Gt, 26) - The screen prefers companies above a certain earnings growth.
+    \item (evtonopat, Lt, 47) - The screen prefers companies that are not overvalued.
+    \item (investedcapital, Lt, 42) - The screen prefers companies with lower levels of investment from share/debt holders.
+    \item (sgaextorevenue, Lt , 49) - The screen prefers companies that are considered profitable.
+    \item (totalequityandnoncontrollinginterests, Lt, 47) - The screen prefers companies with lower levels of investment from all three kinds of shareholders.
+\end{enumerate}
+
+\subsection{Screen Two}
+The second screen with a payoff of 3.03\% was:
+\begin{enumerate}
+    \item (adjweightedavebasicdilutedsharesos, Gt, 40) - The screen prefers companies with a large number of shares.
+    \item (bookvaluepershare, Lt, 66) - The screen prefers smaller companies, or companies with less shares. Considering rule 1, I assume the first of these is true.
+    \item (debttonopat, Gt, 50) - The screen prefers companies that have a larger amount of debt, comparative to their net operating profit.
+    \item (dividendyield, Lt, 40) - The screen prefers companies that pay less to their shareholders.
+    \item (ebit, Gt, 40) - The screen prefers companies with higher earnings.
+    \item (ebitda, Gt, 58) - The screen prefers companies with higher earnings (just by a slightly different measure to the rule above).
+    \item (totalliabilities, Lt, 62) - The screen prefers companies with lower aggregate debt.
+\end{enumerate}
+
+\subsection{Screen Three}
+The third screen with a payoff of 3.5\% was:
+\begin{enumerate}
+    \item (adjweightedavebasicsharesos, Gt, 20) - The screen prefers companies with a large number of shares.
+    \item (finleverage, Lt, 12) - The screen prefers companies with low interest payments.
+    \item (marketcap, Lt, 72) - The screen prefers companies below a certain size.
+    \item (netnonopex, Lt, 32) - The screen prefers companies with lower non-business related expenses.
+    \item (pricetorevenue, Lt, 28) - The screen prefers potentially undervalued businesses.
+\end{enumerate}
+
+\subsection{Screen Four}
+The fourth screen with a payoff of 3.22\% was:
+\begin{enumerate}
+    \item (croic, Gt, 40) - The screen prefers higher CROIC. CROIC is defined such that higher values are better.
+    \item (ebittointerestex, Gt, 40) - The screen prefers high earnings compared to expenses.
+    \item (evtoebitda, Gt, 40) - The screen prefers high valuation compared to earnings. However, this field is normally preferred to be lower.
+    \item (evtoocf, Lt, 45) - The screen prefers companies that could repurchase themselves, using the cash they produce, quicker.
+    \item (faturnover, Lt, 45) - The screen prefers companies that aren't as effective at utilising fixed assets.
+    \item (marketcap, Lt, 30) - The screen prefers smaller companies.
+    \item (nopatqoqgrowth, Gt, 40) - The screen prefers companies with faster growing net operating profit.
+    \item (totalassets, Lt, 55) - The screen prefers companies with lower value of fixed assets.
+\end{enumerate}
+
+\subsection{Screen Five}
+The fifth screen with a payoff of 4.42\% was:
+\begin{enumerate}
+    \item (adjbasiceps, Lt, 10) - The screen either prefers lower net income, higher dividends, or a high number of shares.
+    \item (adjweightedavedilutedsharesos, Gt, 30) - The screen prefers companies with a large number of shares. This contributes to the last of the 3 options for the rule above.
+    \item (ltdebtandcapleases, Lt, 30) - The screen prefers a lower amount of long term debt.
+    \item (sgaextorevenue, Lt, 10) - This is a measure of profitability which prefers to be low, and the screen prefers it to be very low.
+    \item (totalcapital, Gt, 40) - This could either mean that the screen prefers a higher amount of long term debt, or a higher total shareholder equity. Considering that rule 3 explicitly minimises the former, I assume it must be the latter.
+\end{enumerate}
+
+\subsection{Summary of these Screens}
+From looking through this breakdown, the algorithm creates screens that consistently like certain features:
+\begin{itemize}
+    \item Most of the screens prefer large numbers of shares, with only one giving no preference.
+    \item The screens consistently prefer smaller companies.
+    \item When profitability rules appear (e.g. sgaextorevenue), the screens prefer more profitable companies.
+    \item When growth rules appear (e.g. ebitqoqgrowth), the screens prefer companies that are growing quicker.
+\end{itemize}
+
+\noindent However, screen four contains two anomalies:
+\begin{itemize}
+    \item (evtoebitda, Gt, 40) - According to my research in Appendix \ref{evtoebitda}, scores under 10 for evtoebitda are considered healthy. As Figure \ref{fig:ev} shows, this rule will regularly require evtoebitda scores of over 10. Requiring a score of over 10 implies a preference to ``unhealthy'' companies. This is concerning.
+    
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                align =center,
+                xlabel={Quarters since 3-2008},
+                ylabel={Score of 'EV to EBITDA' \\ required to exceed the 40th percentile},
+                legend pos=north east,
+                legend entries={EV to EBITDA, Upper limit of healthy},
+            ]
+            \addplot table [x=qtr,y=evtoebitda] {tables/evtoebitda_analysis.txt};
+            \addplot [domain=0:40, color=red] {10};
+            \end{axis}
+        \end{tikzpicture}
+        \caption{The value of EV to EBITDA required to exceed the 40th percentile, across each quarter of data.}
+        \label{fig:ev}
+    \end{figure}
+    
+    \item (faturnover, Lt, 45) - Fixed Asset Turnover is a measure of the effectiveness of asset usage on income. A low figure implies either low income, or high asset worth. Combining this with the final rule in the screen, (totalassets, Lt, 55), this would imply a preference to companies with lower incomes. There is no particular reason why this should be the case.
+\end{itemize}
+
+\noindent As I have only observed this strange behaviour in one screen, I am not going to take any action at this stage, and will instead continue to monitor for potentially anomalous rules in future tests.
+
+\subsection{Further Changes}
+In order to obtain the five screens analysed above, I ran and observed my algorithm many times. One concerning thing I noticed was the rate at which the algorithm would completely fail and loop forever was remarkably high. \newline
+
+The reason for this behaviour was from Section \ref{emptyScreen}, where I decided to prevent the algorithm from creating empty screening rules by looping the selection-crossover-mutation function until a non empty screen is produced. \newline
+
+This permanent looping was not the problem, but instead a symptom of another problem. My system of running the algorithm with a specific matching ratio (see Section \ref{testingConsequences}), and then iteratively increasing until a ratio of 1 is achieved, has a serious fundamental flaw:
+\begin{itemize}
+    \item Is there any reason why a screener that performs well with a 70\% match, should perform well with an 80\% match?
+\end{itemize}
+
+I now believe the answer to this question is no. The reason that I used the matching ratio in the first place, was to have some easy way to eliminate fields that the algorithm deemed irrelevant. I did this so that during initialisation, I could ensure that the screening strategies had the possibility to search the whole space every time the algorithm ran. \newline
+
+As a reminder, each initial strategy has 50\% of its rules turned on, and 50\% turned off at random. The ratio system was used to reduce the proportion that are turned on over time, as the algorithm decided whether each field was relevant. \newline
+
+I have decided to remove this ratio system, and instead initialise each screening strategy to be a random selection of 10 fields (on average). This change has consequences to other core parts of the algorithm, for example:
+\begin{itemize}
+    \item The change made in Section \ref{invalidField} is no longer required, as all field removal must now be done solely by evolutionary crossover and mutation.
+    \item The change made in Section \ref{iterReset} is no longer needed. However, this change was implemented to lessen the impact of overfitting to the training data. This needs to be replaced with a new system:
+    \begin{itemize}
+        \item \bf Partitioning \rm - I will randomly partition my data set each time the algorithm runs into I+1 parts, where I is a variable for me to tune. This allows each iteration to use a distinct data set, and then leaves one to be used to evaluate the results.
+    \end{itemize}
+\end{itemize}
+
+There are some potential concerns with this new approach. The biggest issue is that initialisation now becomes far more important. It is entirely possible (and likely, given the size of the search space) for bad initialisations to randomly occur, and the algorithm to get stuck in local optima. This may need to be addressed later on.

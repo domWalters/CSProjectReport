@@ -2,14 +2,14 @@
 \subsection{The Stock Market}
 The stock market is ubiquitous within modern life. Any time you look at the news, it will be featured. References to stock indices such as the NASDAQ Composite, FTSE 100, Dow Jones, or the S\&P 500 permeate any discussion of the western economy in the modern day, and yet very few people actually interact directly with the market. \newline
 
-The average person doesn’t buy stocks, the closest they get is investing in an ISA through their bank (and not even all ISAs invest in stocks). The prevailing reason for this is that it is simply too difficult to participate in  stock trading and make a reasonable return, as a casual investor. The average person doesn’t understand the majority of the statistics behind stock trading, and they don't understand the basics of when to buy and when to sell. \newline
+The average person does not buy stocks, the closest they get is investing in an ISA through their bank (and not even all ISAs invest in stocks). The prevailing reason for this is that, as a casual investor, it is simply too difficult to participate in stock trading and make a reasonable return. The average person does not understand the majority of the statistics behind stock trading, and they don't understand the basics of when to buy and when to sell. \newline
 
 This is where stock screeners come in; they provide a simple way to filter out stocks that are wholly inappropriate to invest in. However, a large amount of currently widely used screening strategies are years (if not decades) old, raising doubts as to their efficacy. Could the generation of newer, more up to date screening rules be automated? And if so, would these automatically generated rules perform to a competitive standard in the modern market?
 
 \subsection{Generating Screening Rules}
 I suggest an investigation into the efficacy of creating an algorithm that generates profitable stock screening rules, by utilising evolutionary machine learning techniques. This algorithm would run over as much historical data as possible, and provide new screening strategies that are as up to date as the data it uses. \newline
 
-Such an algorithm would allow traders (both casual and professional) to remain up to date with current market trends, as the screening rules would adapt to changes in the economy over time. If a strategy begins to perform poorly, a new one can be automatically generated to replace it.
+Such an algorithm would allow traders (both casual and professional) to remain up to date with current market trends, as the screening rules would adapt to changes in the economy over time. If a strategy begins to perform poorly, a new one can be automatically generated to replace it. \newline
 
 Generating valid screening strategies would be the logical first step, but once generated how can a value be assigned to these strategies?
 
@@ -26,7 +26,7 @@ A screening rule is only as good as the return that it obtains on the stocks tha
     \item What data should be used in this evaluation?
 \end{itemize}
 
-However, once these choices are made and a value assigned to each strategy, how can these values be contextualised with regards to actual stock trading returns in the real world? What does it mean to achieve a ``good'' return?
+Once these choices are made and a value is assigned to each strategy, how can these values be contextualised with regards to actual stock trading returns in the real world? What does it mean to achieve a ``good'' return?
 
 \subsubsection{Market Indices}
 One of the simplest and most risk-free ways to invest your money in the real world is to buy an index fund. An index fund is a stock portfolio that is constructed to track a prominent market index. Such market indices include the aforementioned NASDAQ Composite, Dow Jones, and S\&P 500 from the American market, and the variety of FTSE indices from the UK market. \newline
@@ -39,5 +39,7 @@ A market index is a portfolio of stocks that are used to measure some specific s
     \item \bf S\&P 500 \rm - The S\&P 500 represents the market-capitalisation-weighted value of 500 specific American companies. These companies are selected by a committee based on a set of 8 criteria including:  market capitalization, financial viability, and the length of time that they have been publicly traded.
 \end{itemize}
 
-Of these three, the S\&P 500 is considered the best representation of the US Stock Market. \cite{snp500Best} \newline
+Of these three, the S\&P 500 is widely considered to be the best representation of the US Stock Market. \cite{snp500Best} Warren Buffett, one of the world's leading investors and perhaps the most famous person involved with the US stock market, has said that he has a ``tough time'' trying to outdo the returns of the S\&P 500 Index. Furthermore, he has said that personally he would ``buy the S\&P in a second''. \cite{buffettsnp} \newline
+
+Therefore, to contextualise the screening rules that my algorithm will create, I will evaluate their yearly return against the yearly return of the S\&P 500 index. \newline
 

@@ -29,7 +29,7 @@ The author goes on to specify that this is a useful construct within the field o
 
 \subsubsection{The Experiments}
 
-The core of the study consists of two experiments, both effectively the same but the second at a larger scale; presumably this was done in the case that the second experiment wasn't successful so the authors would at least have something to report. Due to the similarity between these experiments, I'm going to ignore the first one. \newline
+The core of the study consists of two experiments, both effectively the same but the second at a larger scale; presumably this was done in case the second experiment wasn't successful so the authors would at least have something to report. Due to the similarity between these experiments, I'm going to ignore the first one. \newline
 
 In both experiments the authors genetic algorithm is compared to a neural network performing the same task. The task here is the classification of stocks into three categories: buy, sell, and no opinion. The algorithm is set up such that ``both GA and NN forecasts are made at the end of the week for three consecutive weeks. Each weekend, forecasts are made for over 1600 stocks. Twelve weeks after each forecast, the forecasts are compared with actual 12-week relative returns.'' \newline
 
@@ -39,12 +39,29 @@ The GA and NN predict both the ``magnitude and direction of the return of each s
 
 The GAs outperformed the NNs overall with a larger spread (2.16\% versus 1.4\%) and better mean relative return performance over the top two quintiles (typically only stocks in the top two quintiles of this statistic are traded). \newline
 
-The author goes on to reference a prior paper by Mahfoud \& Mani from 1995, suggesting that ``an approach that utilizes both GA and NN forecasts is superior to utilizing the better of the two algorithms, in isolation''. The author demonstrates that this hypothesis was correct in this case, with ``an average relative return of 6.61\% in the top quintile of the positive combined forecasts. This is a 21\% improvement over the GAs alone, and a 50\% improvement over the NNs alone.''
+The author goes on to reference a prior paper by Mahfoud \& Mani from 1995, suggesting that ``an approach that utilizes both GA and NN forecasts is superior to utilizing the better of the two algorithms, in isolation''. The author demonstrates that this hypothesis was correct in this experiment, with ``an average relative return of 6.61\% in the top quintile of the positive combined forecasts. This is a 21\% improvement over the GAs alone, and a 50\% improvement over the NNs alone.''
 
 \subsubsection{GA versus NN}
 
-The final discussion the author presents is whether GAs or NNs are better for this style of application. 
+The final discussion the author presents is whether GAs or NNs are better for this style of application. The author doesn't conclude that either method is superior to the other, referring to both methods as ``promising''. The author continues, suggesting that this promise is ``due to their ability to learn nonlinear relationships ... (that) are typically not apparent to the average market participant''. In other words, the algorithms can spot trends that a human observer (or a less sophisticated computer method) couldn't reliably notice. \newline
+
+The author attributes the better performance of the GAs to their ability to abstain from predicting (which was done 27\% of the time), whereas the neural network was forced to always predict. This is quite a significant functional difference, which throws the overall result into doubt; the comparison between the two systems is hardly fair if only one of them enjoys more advanced features. \newline
+
+The last comment that I wish to highlight is that GAs have the ability to output ``comprehensible rules''. Unlike black box methods like NNs, the GAs output can be easily designed to be human readable. This allows the output of the GA to be easily examined, and for it to be compared - immediately and directly - with human designed methods.
 
 \subsection{Using GAs to find Technical Trading rules \cite{allenKarjalainen}}
+This second study experiments with a genetic algorithm ``to learn technical trading rules for the S\&P 500 index using daily prices from 1928 to 1995.'' This is much closer to what I am trying to achieve than the first paper.
+
+\subsubsection{Introduction}
+The paper begins by stating its purpose: ``to demonstrate how they (Genetic Algorithms) can be used to find technical trading rules.'' It continues with a presentation of past literature, stating that ``such rules do not make money''. \newline
+
+A number of studies are referenced, including Fama (1970) which ``dismiss(ed) technical analysis as a futile undertaking'' \cite{fama70}. Brock et al. (1992) was slightly more hopeful, showing that ``in the absence of transaction costs ... these rules identify periods to be in the market when returns are high and volatility is low (and vice versa)'' \cite{brock92}.
+
+\subsubsection{Genetic Algorithms Overview}
+The second chapter presents an overview of the basics of Evolutionary Algorithms as well as Genetic Programming. I am motivated to skip this section as I intend to provide my own summary of the relevant concepts within Evolutionary Algorithms in a later chapter, but also, there are several statements from this chapter which are no longer accurate. \newline
+
+For example, the author states that ``solution candidates are represented as character strings from a given (often binary) alphabet.'' Whilst this is still a valid method to represent solution candidates, advances in the complexity of computers have allowed for more elaborate representations. \newline
+
+There is a related comment later in the section stating that evolutionary algorithms ``embody very little problem-specific knowledge''. This is incorrect; evolutionary algorithms can be customised in a variety of ways to their problem domain, most specifically with regards to the fitness function (which the author themselves concedes in chapter 2.1 paragraph 2) and problem representation. A custom representation then demands at least custom crossover and mutation functions, and perhaps even requiring a custom selection function as well.
 
 \subsection{Generating trading rules with GAs \cite{potvinaSorianoaVallee}}

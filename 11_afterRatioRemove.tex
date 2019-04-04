@@ -1,0 +1,29 @@
+\section{Implementation after Ratio Removal}
+The implementation of the core structures from Chapter \ref{implementationContext} are largely unchanged, with the exception of DataRecord:
+\begin{itemize}
+    \item \bf DataRecord \rm - A vector of arbitrary length containing floats or integers, along with an ID for this vector, \bf and an iteration number.\rm \ This is the core data structure that is used to hold the training data. Each one is a snapshot of a large number of fundamental statistics for a specific business at the end of a specific quarter. \bf Each DataRecord is only used in the iteration that matches its iteration number, to combat overfitting.\rm
+\end{itemize}
+
+The significant change is to the pseudocode of the algorithm.
+
+\subsection{Pseudocode after Ratio Removal}
+
+\begin{enumerate}
+    \item \bf Initialisation \rm - Generate initial population $gen_{0}$.
+    \item For i from \{1, .., I+1\}
+    \begin{enumerate}
+        \item For g from \{1, .., G\}
+        \begin{enumerate}
+            \item Create blank population $gen_{g}$
+            \item For n from \{1, .., size of $gen_{g-1}$\}
+            \begin{enumerate}
+                \item Play through 9.5 years of the stock trading game, buying stocks that fully match the screening strategy.
+                \item \bf Selection \rm - Select two members of $gen_{g-1}$ by doing two rounds of k = 3 tournament selection, using the payoff calculated during the game as the fitness function.
+                \item \bf Crossover \rm - Create a new member by linear average crossover of the two selected members.
+                \item \bf Mutation \rm - Mutate the new member, on average changing one rule per screen.
+                \item Add the new member to $gen_{g}$.
+            \end{enumerate}
+        \end{enumerate}
+    \end{enumerate}
+    \item Return $gen_{G-1}$ with the payoffs calculated in iteration I+1.
+\end{enumerate}

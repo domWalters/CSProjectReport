@@ -1,0 +1,61 @@
+\section{Functional Tests} \label{functTests}
+The first thing I need to ascertain is whether the .csv reader, genetic algorithm, and simulation game are functionally correct. This can be split into tests on each section of the system:
+\begin{itemize}
+    \item \bf .csv reformatting \rm - The independent program to reformat the .csv test data is ``correct'', and provides files that obeys the set of assumptions presented in \ref{DataCSVRead}.
+    \item \bf .csv data loading \rm - The loader that takes the .csv files and parses them in to the program does so ``correctly'', retaining the assumptions in \ref{DataCSVRead}.
+    \item \bf Initialisation \rm - The Game initialisation function provides a valid initial game state.
+    \item \bf Simulation \rm - The Simulation game provides a list of stocks that are valid to purchase for any given screening strategy.
+    \item \bf Termination \rm - The Game terminates after the set number of generations.
+    \item \bf Improvement \rm - The algorithm provides a population of solutions that, on average, ``improve'' up to some generation number after which it stays within a sufficiently small neighbourhood of a convergence point.
+\end{itemize}
+
+I performed this testing very informally (without repeatable unit tests), as my software is purely experimental and is not intended to go to production. Furthermore, several of these tests are for elements of the system that are unlikely to ever change (the .csv manipulations, and initialisation) and so won't need to be tested repeatedly. At this stage the first 5 test cases were fine but the last was not.
+
+\subsection{Functional Testing - Match Percentage Problem COMPLETE REWRITE} \label{testingConsequences}
+In my initial implementation the algorithm required \bf every \rm element of a prospective stock to purchase to be greater than the corresponding elements of the strategy it was being purchased for. However, this is extremely unlikely to happen, and as such was causing my algorithm to decide to never purchase any stocks at all. The reason that this is very unlikely is that some of the fields that the algorithm is attempting to optimise simply don't have any relationship to the value of the stock; no matter what the field's value is, the price of the stock doesn't change. \newline
+
+To some degree this is obvious; not every piece of data on a company is going to have a correlation to the companies stock price. The algorithm needs a way to deal with this, by ignoring fields that it deems irrelevant. \newline
+
+Through trial and error I decided to see what would happen with a 50\% match between a prospective stock and a strategy, instead of a 100\% match. The algorithm ran, it bought stocks, and it's payoff increased over time. I decided to do some analysis on the final generation of the algorithm, and see which fields each strategy matched on most often. \newline
+
+The way I did this was by creating a vector of integers for each screening strategy; one integer per field of the strategy. These integers represented the number of stocks that were purchased by matching on that specific field. By examining this vector over many runs of the algorithm, I realised that these counting integers would be higher for fields that the algorithm thought relevant, and lower for fields that it didn't think relevant. \newline
+
+This gave me the idea that I could run the algorithm several times: each time it would do this analysis and decide which fields are meaningless, remove these meaningless fields, and then go to the next run over the remaining fields but this time requiring a higher match percentage. This is then repeated, until a match percentage of 100\% is reached.
+
+\subsection{Implementation after Functional Testing}
+I made changes to my initial design to accommodate this further functionality and to fix the issue in Section \ref{testingConsequences}. I now have 6 core objects, up from 4:
+\begin{itemize}
+    \item \bf Screener \rm - A vector of arbitrary length containing floats. This is the core data structure that will be used to hold the proposed screening strategies that get passed through the algorithm.
+    \item \bf DataRecord \rm - A vector of arbitrary length containing floats, along with a name for this vector. This is the core data structure that is used to hold the training data. Each one is a snapshot of a large number of fundamental statistics for a specific business at the end of a specific quarter.
+    \item \bf Quarter \rm - A vector of arbitrary length containing DataRecords. This object contains a section of the historical training data, specifically every DataRecord for a given quarter of a given year. It contains a selection of functions that allow Players to buy stocks, and calculate their payoffs.
+    \item \bf Quarters \rm - A vector of arbitrary length containing Quarters. This object contains every quarter that the algorithm is allowed to optimise over.
+    \item \bf Player \rm - A struct containing:
+    \begin{itemize}
+        \item[$\ast$] A Screener to be used as the screening strategy throughout the game.
+        \item[$\ast$] A float representing the screening strategy's payoff.
+        \item[$\ast$] A vector of DataRecords representing the stocks that were bought over the course of the game.
+        \item[$\ast$] A vector of booleans, dictating whether the corresponding field of the strategy is currently being used.
+    \end{itemize}
+    This object represents a strategy as it passes through a run of the game. At the end, it has an associated list of stocks that it chose to purchase, as well as a payoff created by buying these stocks. This is then used during the generation of the next population. It can also choose to ignore fields that it thinks aren't relevant.
+    \item \bf Game \rm - A struct containing:
+    \begin{itemize}
+        \item[$\ast$] A vector of arbitrary length containing all of the current players.
+        \item[$\ast$] A Quarters object.
+        \item[$\ast$] A variety of variables that track the current game state.
+    \end{itemize}
+        This object represents the game itself, and the associated population of players. It has functions that perform iterations of the game, generate the next population, reset the game, and redefine the boolean vectors for each player.
+\end{itemize}
+
+The biggest changes are:
+\begin{itemize}
+    \item \bf Separation of data types for the training data and the prospective screening strategies. \rm This was done because prospective screens didn't need names (something the training data does need), and a large variety of functions that were provided for use on DataSlices were only valid for either training data or potential screens and not both. By compartmentalising into two types, any ambiguity as to what these functions did was removed.
+    \item \bf Addition of the Quarters object. \rm This was an oversight of the initial design. The Game object needs access to all of the quarters at all times so it required an object to perform the initial reading in of the quarters, and then to hold them for the duration of the algorithm.
+    \item \bf Addition of a vector of booleans to Player. \rm This was a result of the changes I made due to the discussion in \ref{testingConsequences}. By using this vector, specific fields in the Screener for the Player can be toggled off. This allows the algorithm to decide that a field is irrelevant and stop considering it.
+\end{itemize}
+
+\subsection{Potential Future Changes}
+I have several suggestions to improve the current algorithm:
+
+\begin{itemize}
+    \item \bf Use distributions over the training data during initialisation, crossover, and mutation. \rm Right now initialisation simply generates uniformly random points from the lower limit of the training data for that field, to the upper limit for that field. This isn't very realistic. Similarly, crossover does a very dumb linear average of the two fields and mutation simply makes a -10\% to +10\% change to the field. All of these could be improved by sampling a probability distribution over the training data instead.
+\end{itemize}

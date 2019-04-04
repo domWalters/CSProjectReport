@@ -6,29 +6,41 @@
 \usepackage{amssymb}
 \usepackage[superscript,biblabel]{cite}
 
-\title{An Investigation into the use of Genetic Algorithms to design and optimise Screening Rules to be used in  automatic stock trading}
-\author{Dominic Walters}
-\date{ }
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{colortbl}
 
-\renewcommand*\contentsname{}
 \setcounter{section}{-1}
 
-\begin{document}
-\maketitle
-\vspace{-20mm}
-\tableofcontents
+\pgfplotstableset{% global configuration
+  every head row/.style={before row=\toprule,after row=\midrule},
+  every last row/.style={after row=\bottomrule},
+  fixed,precision=4,
+}
 
-\include{abstract}
-\include{introduction}
-\include{proposal}
-\include{literatureRev}
-\include{prerequisiteKnowledge}
-\include{implementation}
-\include{testing}
-\include{implementationTwo}
-\include{evaluativeTesting}
-\include{implementationThree}
-\include{actualTesting}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+
+\begin{document}
+\include{titlepage}
+\tableofcontents
+\include{0_abstract}
+\include{1_introduction}
+\include{2_proposal}
+\include{3_literatureRev}
+\include{4_prerequisiteKnowledge}
+\include{5_implementation}
+\include{6_trainingData}
+\include{7_firstFunctionalTest}
+\include{8_contextualising}
+\include{9_implementationContext}
+\include{10_beforeRatioRemove}
+\include{11_afterRatioRemove}
+\include{12_evaluativeTesting}
 \include{appendix}
 
 \bibliographystyle{unsrt}

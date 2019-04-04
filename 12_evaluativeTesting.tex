@@ -1,0 +1,144 @@
+\section{Testing - Variable Tuning} \label{actualTesting}
+To begin my evaluative testing, I feel it necessary to tune the parameters of my algorithm that I believe impact its ability to generate good solutions. There are four key parameters:
+
+\begin{itemize}
+    \item \bf Number of Generations \rm - The number of times to run through the simulation game and create a new population. This number of generations occur every iteration.
+    \item \bf Number of Iterations \rm - The number of segments to cut the data into. The first n-1 of these are used to train the algorithm, and the last is used to evaluate it.
+    \item \bf Population Size \rm - The number of members of each population.
+    \item \bf Percentile Data Spread \rm - The number of percentiles to cut the data into. This must be a number that divides 100 with no remainder.
+\end{itemize}
+
+For each of these variables, I took 4 or more possible assignments to that variable (whilst keeping all of the other variables constant) and ran the algorithm with each assignment 10 times. I then looked at the best results from each of the ten runs, and averaged them. The default values used for each variable are:
+\begin{itemize}
+    \item Number of Generations = 10
+    \item Number of Iterations = 3
+    \item Population Size = 100
+    \item Percentile Data Spread = 10 percentiles
+\end{itemize}
+
+\begin{figure}[p]
+    \subsection{Number of Generations}
+    For these tests I used: 
+    \begin{itemize}
+        \item Number of Generations = \{10, 15, 20, 25\}
+    \end{itemize}
+    For the full tabular results see Appendix \ref{varyGen}.
+    {\centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={Generations},
+            ylabel={Payoff (\%)},
+            legend pos=north east,
+            legend entries={Mean,Median},
+        ]
+        \addplot table [x=gen,y=mean] {tables/generations-default.txt};
+        \addplot table [x=gen,y=median] {tables/generations-default.txt};
+        \end{axis}
+    \end{tikzpicture}}
+    \newline \newline
+    These results are rather concerning. 
+\end{figure}
+
+\begin{figure}[p]
+    \subsection{Number of Iterations}
+    For these tests I used:
+    \begin{itemize}
+        \item Number of Iterations = \{2,3,4,5\}
+    \end{itemize}
+    {\centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={Iterations},
+            ylabel={Payoff (\%)},
+            legend pos=north east,
+            legend entries={Mean,Median},
+        ]
+        \addplot table [x=iter,y=mean] {tables/iterations-default.txt};
+        \addplot table [x=iter,y=median] {tables/iterations-default.txt};
+        \end{axis}
+    \end{tikzpicture}}
+    \newline \newline
+\end{figure}
+
+\begin{figure}[p]
+    \subsection{Population Size}
+    For these tests I used:
+    \begin{itemize}
+        \item Population Size = \{50,100,150,200\}
+    \end{itemize}
+    {\centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={Population Size},
+            ylabel={Payoff (\%)},
+            legend pos=south east,
+            legend entries={Mean,Median},
+        ]
+        \addplot table [x=lambda,y=mean] {tables/lambda-default.txt};
+        \addplot table [x=lambda,y=median] {tables/lambda-default.txt};
+        \end{axis}
+    \end{tikzpicture}}
+    \newline \newline
+\end{figure}
+
+\begin{figure}[p]
+    \subsection{Percentile Data Spread}
+    For these tests I used:
+    \begin{itemize}
+        \item Percentile Data Spread = \{100, 50, 25, 20, 10\} percentiles
+    \end{itemize}
+    {\centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={Percentile Gap},
+            ylabel={Payoff (\%)},
+            legend pos=south east,
+            legend entries={Mean,Median},
+        ]
+        \addplot table [x=percentiles,y=mean] {tables/percentiles-default.txt};
+        \addplot table [x=percentiles,y=median] {tables/percentiles-default.txt};
+        \end{axis}
+    \end{tikzpicture}}
+    \newline \newline
+\end{figure}
+
+% \subsection{OLD STUFF}
+
+% In order to obtain results that I can evaluate from my algorithm, I am running it with different percentile spreads and 10 times with each of them. At the end of each run I save the entire population with their payoff per year, and select the best one. \newline
+
+% The reason I am opting to test at multiple percentile sizes is due to the massive change in search space that can occur depending on which one you use. For example, taking a percentile size of 1 means that each rule can have a value from [1, 2, .., 99]. There are $\approx$ 130 rules; they can be \textless or \textgreater (2 options), and on or off (2 options). Therefore, the corresponding search space size will have an upper bound of $2 \cdot 2 \cdot 99^{130} > 10^{260}$, which is monumental. \newline
+
+% Taking a percentile size of 5 instead results in a search space with an upper bound of $2 \cdot 2 \cdot19^{130} > 10^{166}$, a number that is still monumental but far smaller than the first case. I would like to test whether this change in search space size impacts the efficacy of the algorithm, which I believe will be the case. \newline
+
+% The percentile sizes that I have chosen are:
+% \begin{itemize}
+%     \item 1s - All data and rules are from the set of percentiles \{1, 2, 3, ..., 99\}.
+%     \item 2s - All data and rules are from the set of percentiles \{2, 4, 6, ..., 98\}.
+%     \item 4s - All data and rules are from the set of percentiles \{4, 8, 12, ..., 96\}.
+%     \item 5s - All data and rules are from the set of percentiles \{5, 10, 15, ..., 95\}.
+%     \item 10s - All data and rules are from the set of percentiles \{10, 20, 30, ..., 90\}.
+% \end{itemize}
+
+% I'll begin by verbosely stating my results along with the best screener in each case, and then going in depth into what the individual screeners represent, whether they make sense in context, and what I believe this means for my algorithm as a whole. I'll summarise with a list of what I think would be good changes.
+
+% \subsection{Summary of Findings}
+
+% \begin{itemize}
+%     \item Finer grain percentiles perform better on average.
+%     \item Large variance in screener quality probably means that initialisation is very important in deciding whether the screeners will be good. This is probably due to the size of the search space, and lack of niching methods in my algorithm.
+%     \item Screeners are mostly consistent; they consistently like and dislike the same things:
+%     \begin{itemize}
+%         \item Smaller businesses are preferred.
+%         \item High earnings are preferred.
+%     \end{itemize}
+%     \item Populations converge completely by the end, this is potentially not great and likely impacts my second point as well.
+% \end{itemize}
+
+% \subsection{Changes to make}
+
+% \begin{itemize}
+%     \item Add some form of niching. Initially my idea is to make sure that each new member doesn't have the exact same used list as any other existing member.
+%     \item Stop initialising 50\% of the used fields to be true. Instead, initialise 10 on average. This tallies up with what successful screeners generally look like when the algorithm ends.
+%     \item As a result of the above, remove the ratio system. This is basically an artifact of an early implementation.
+%     \item Again as a result of the above, delete the recalc\_fields\_used method. We no longer need to unitnitialise bad fields for the purpose of the ratio metric. They will naturally be removed by evolution.
+% \end{itemize}
