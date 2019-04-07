@@ -1,4 +1,8 @@
 \section{Abstract}
+This report investigates the feasibility of creating an algorithm to generate screening strategies to filter promising stocks out of the stock market. \newline
 
+The program devised in this paper is an evolutionary algorithm over a population of screening strategies. Using the genetic operators of selection, crossover, and mutation, the algorithm improves its screening strategies over successive generations. Three major versions of this algorithm are defined, with significant changes and improvements made from one to the next, before settling on a final structure and pseudocode in Section \ref{impRatioRem}. \newline
 
-All software for this project can be found at: \newline \url{https://git-teaching.cs.bham.ac.uk/mod-ug-proj-2018/dxw407}.
+The parameters of this final structure are tuned to create the best screening strategies possible. One of these parameters posed a particular concern, as it didn't behave anywhere close to how I expected. Once the algorithms efficacy is demonstrated, it is compared to two minor modifications that involve additional methods which introduce elitism and speciation. All 3 versions provide screening strategies that outperform the yearly return of the S\&P 500 index, without transaction costs. \newline 
+
+Finally, a selection of possible future investigations are presented, before concluding remarks. All software for this project can be found at: \newline \url{https://git-teaching.cs.bham.ac.uk/mod-ug-proj-2018/dxw407}.

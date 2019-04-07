@@ -1,4 +1,4 @@
-\section{Implementation after Ratio Removal}
+\section{Implementation after Ratio Removal} \label{impRatioRem}
 The implementation of the core structures from Chapter \ref{implementationContext} are largely unchanged, with the exception of DataRecord:
 \begin{itemize}
     \item \bf DataRecord \rm - A vector of arbitrary length containing floats or integers, along with an ID for this vector, \bf and an iteration number.\rm \ This is the core data structure that is used to hold the training data. Each one is a snapshot of a large number of fundamental statistics for a specific business at the end of a specific quarter. \bf Each DataRecord is only used in the iteration that matches its iteration number, to combat overfitting.\rm
