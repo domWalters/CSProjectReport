@@ -6,7 +6,7 @@ Among the elements of the proposed screeners were entries where the boolean swit
 
 For example, in several runs of the algorithm there were fields that were turned on that had values that were so small that they filtered out less than 5 stocks out of the 5000 that I had at the time. My interpretation of this behaviour is that by optimising the field to be almost non existent, the algorithm is effectively forcing the value of the field to be ignored even though the boolean switch still designates the field as relevant. This should be taken into account when the boolean switches are flipped. \newline
 
-I fixed this by - at initialisation - creating a sorted vector of all of the training data samples for each field, and ensuring that any prospective field in the screener filters out at least 0.1\% of the training data. This ensures a baseline level of relevance for each field in the screener.
+I fixed this by creating a sorted vector of all of the training data samples for each field (at initialisation), and ensuring that any prospective field in the screener filters out at least 0.1\% of the training data. This ensures a baseline level of relevance for each field in the screener.
 
 \subsection{The Empty Screen} \label{emptyScreen}
 Further to the above concern, I also noticed that many of the Player objects - when the algorithm terminated - were using ``the empty screen''; the screen where every element is turned off. This is potentially detrimental to the efficacy of the algorithm, as this effectively means that the population is shrinking over time. \newline
@@ -16,7 +16,7 @@ To prevent this, I am ensuring that the resultant Player created from the select
 \subsection{Badly Formed Screeners}
 A concern connected to \ref{invalidField} is that the screener provided by the algorithm would often be badly formed. These badly formed screeners can be split into two categories.
 
-\subsubsection{Long Screeners}
+\subsubsection{Long Screeners} \label{longScreeners}
 Standard screening strategies used by current stocks traders contain fewer rules than the screeners that my algorithm creates. For example, the current top 5 screening strategies (by return on investment) listed on Stockopedia contain: 6, 5, 4, 5, and 7 rules respectively. \cite{stockopediaScreens} Whereas, my algorithm outputs screens of anywhere from 10-30 rules in a standard run. \newline
 
 As a result of this considerable disparity, I decided to transform the payoff from the stocks trading game by multiplying it by a punishing factor:
@@ -94,7 +94,7 @@ When fields are removed by the algorithm (e.g. by the methods from Section \ref{
 \subsection{Percentile Vs Raw Floats}
 A suggestion made to me by my supervisor, was that my search space was almost certainly too large. By using floating point numbers with huge ranges (some of these ranges being from the negative billions to the positive billions), I am considering a search space that is far too large to optimise over. \newline
 
-He made the suggestion that instead of using complex floating point data, I should simplify the problem to use integer percentiles for each field of training data. By making this change, each field has a much smaller range of values that it can take, and can therefore be searched more effectively. It also lowers the impact of incredibly high/low values.
+He made the suggestion that instead of using complex floating point data, I should simplify the problem to use integer percentiles for each field of training data. By making this change, each field has a much smaller range of values that it can take, and can therefore be searched more effectively. It also lowers the impact of incredibly high or low values.
 
 \subsection{Upper Limits}
 A decision I made early on in the design process was to only allow the Screener to consist of lower bounds on each field. Every rule it optimised was of the form ``field \textgreater \, lower\_bound''. I made this decision for simplicity sake in early development. Now that my system is functional, I can add the case for the upper limit, ``field \textless \, upper\_bound''. \newline

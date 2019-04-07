@@ -17,7 +17,7 @@ My final choice of language was Rust, a newer language from 2010. \cite{rustLang
 It's on a similar level of abstraction to C++, but has many of the core aspects of Object Oriented Languages like Java. I had used the language recreationally within the last year, and due to it's similarity to other languages that I have used extensively, I felt confident that I could become proficient enough to achieve the goals of this project.
 
 \subsection{Design - Simulation Game}
-I began with a consideration of the data structures required to get my proposed ``Simulation Game'' to work. I settled on 4 core objects:
+I began with a consideration of the data structures required to get my proposed ``Simulation Game'' to work. I settled on four core objects:
 \begin{itemize}
     \item \bf DataSlice \rm - A vector of arbitrary length containing floating point data, along with a ``name'' string for this vector. This is the core data structure that will be used to hold all of the test data, as well as the proposed screening strategies that get passed through the game and algorithm. Each one will be a snapshot of a large number of statistics thought relevant to the overall performance of a business.
     \item \bf Quarter \rm - A vector of arbitrary length containing DataSlices. This object will contain a section of test data, the historical data that will be used to train the evolutionary algorithm. Specifically these DataSlices will all be snapshots taken at the same time, namely at the start of one of the four quarters in a year.

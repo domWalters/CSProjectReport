@@ -11,7 +11,7 @@ This first paper outlines ``a new system that utilizes genetic algorithms...to p
 
 It begins by outlining the basic terminology within Machine Learning and Genetic Algorithms, particularly the concepts of Mutation and Crossover within the field of GAs. A key term defined early on is ``genetic material'' (nowadays commonly referred to as the Chromosome or the Genotype). The Chromosome (Genotype) is a set of parameters which define a proposed solution (Phenotype). In layman's terms, the solution is a specific realisation of the chromosome. \newline
 
-The author makes a key distinction here, saying that the algorithm ``implicitly processes...the genetic material (chromosomes)...and not individual solutions''. This is an important separation of concepts; the algorithm doesn't transform existing solutions into new solutions, it transforms the set of possible solutions into a new set of possible solutions, which is ``better'' in some definable fashion. \newline
+The author makes a key distinction here, saying that the algorithm ``implicitly processes...the genetic material (chromosomes)...and not individual solutions''. This is an important separation of concepts; the algorithm does not transform existing solutions into new solutions, it transforms the set of possible solutions into a new set of possible solutions, which is ``better'' in some definable fashion. \newline
 
 The paper then gives a specific example saying ``...a GA may discover that one variable, such as price-to-earnings ratio, is a better indicator of future return than another, such as past return''. This is the core feature of genetic algorithms that enable them to search their domain more efficiently; they can bias in favour of the better ``dimension'', the more important rule in the chromosome.
 
@@ -29,7 +29,7 @@ The author goes on to specify that this is a useful construct within the field o
 
 \subsubsection{The Experiments}
 
-The core of the study consists of two experiments, both effectively the same but the second at a larger scale; presumably this was done in case the second experiment wasn't successful so the authors would at least have something to report. Due to the similarity between these experiments, I'm going to ignore the first one. \newline
+The core of the study consists of two experiments, both effectively the same but the second at a larger scale; presumably this was done in case the second experiment wasn't successful so the authors would at least have something to report. Due to the similarity between these experiments, I am going to ignore the first one. \newline
 
 In both experiments the authors genetic algorithm is compared to a neural network performing the same task. The task here is the classification of stocks into three categories: buy, sell, and no opinion. The algorithm is set up such that ``both GA and NN forecasts are made at the end of the week for three consecutive weeks. Each weekend, forecasts are made for over 1600 stocks. Twelve weeks after each forecast, the forecasts are compared with actual 12-week relative returns.'' \newline
 
@@ -43,7 +43,7 @@ The author goes on to reference a prior paper by Mahfoud \& Mani from 1995, sugg
 
 \subsubsection{GA versus NN}
 
-The final discussion the author presents is whether GAs or NNs are better for this style of application. The author doesn't conclude that either method is superior to the other, referring to both methods as ``promising''. The author continues, suggesting that this promise is ``due to their ability to learn nonlinear relationships ... (that) are typically not apparent to the average market participant''. In other words, the algorithms can spot trends that a human observer (or a less sophisticated computer method) couldn't reliably notice. \newline
+The final discussion the author presents is whether GAs or NNs are better for this style of application. The author does not conclude that either method is superior to the other, referring to both methods as ``promising''. The author continues, suggesting that this promise is ``due to their ability to learn nonlinear relationships ... (that) are typically not apparent to the average market participant''. In other words, the algorithms can spot trends that a human observer (or a less sophisticated computer method) could not reliably notice. \newline
 
 The author attributes the better performance of the GAs to their ability to abstain from predicting (which was done 27\% of the time), whereas the neural network was forced to always predict. This is quite a significant functional difference, which throws the overall result into doubt; the comparison between the two systems is hardly fair if only one of them enjoys more advanced features. \newline
 
@@ -60,8 +60,39 @@ A number of studies are referenced, including Fama (1970) which ``dismiss(ed) te
 \subsubsection{Genetic Algorithms Overview}
 The second chapter presents an overview of the basics of Evolutionary Algorithms as well as Genetic Programming. I am motivated to skip this section as I intend to provide my own summary of the relevant concepts within Evolutionary Algorithms in a later chapter, but also, there are several statements from this chapter which are no longer accurate. \newline
 
-For example, the author states that ``solution candidates are represented as character strings from a given (often binary) alphabet.'' Whilst this is still a valid method to represent solution candidates, advances in the complexity of computers have allowed for more elaborate representations. \newline
+For example, the author states that ``solution candidates are represented as character strings from a given (often binary) alphabet.'' Whilst this is still a valid method to represent solution candidates, advances in the complexity of computers have allowed for more elaborate representations than simple bit strings. \newline
 
 There is a related comment later in the section stating that evolutionary algorithms ``embody very little problem-specific knowledge''. This is incorrect; evolutionary algorithms can be customised in a variety of ways to their problem domain, most specifically with regards to the fitness function (which the author themselves concedes in chapter 2.1 paragraph 2) and problem representation. A custom representation then demands at least custom crossover and mutation functions, and perhaps even requiring a custom selection function as well.
 
-\subsection{Generating trading rules with GAs \cite{potvinaSorianoaVallee}}
+\subsubsection{Representing Trading Rules}
+After introducing Genetic Programming in the last chapter, the authors go into detail as to how they will represent their trading rules as genetic programs. \newline
+
+The rules are constructed as trees, from a variety of mathematical and logical operators. Each tree corresponds to a boolean expression which at any point in time is either true or false. The authors provide two simple example rules:
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/averageAndMax.png}
+\end{figure}
+
+The left tree represents a rule which evaluates true if the current stock price is greater than a 50 day moving average of the stock price, and the right represents a rule which evaluates true if the current stock price is greater than the 30 day maximum stock price. \newline 
+
+The author continues by defining the necessary crossover operator for this tree representation, as well as an appropriate fitness function.
+
+\subsubsection{Overfitting}
+After discussing representation, the author stresses the need to address the ``possibility of overfitting the training data''. Overfitting can occur in machine learning algorithms for a variety of reasons, but most stem from having a lack of data:
+\begin{itemize}
+    \item Small Data Set - The algorithm can only detect trends over the data it has. If the data set is small, the algorithm has less chance to detect common trends.
+    \item Training Data Reuse - Small data sets may necessitate that the algorithm be repeatedly trained over the same data. Unless precautions are taken, this may result in the algorithm learning the data set as opposed to learning its trends.
+    \item Evaluating on Training Data - If the algorithm is evaluated on data that it has already seen (data that it was trained on), then it is likely to give inaccurate results.
+\end{itemize}
+
+The author proposes a series of options to tackle this overfitting, including ``reserving
+a part of the data as a validation set on which to test the predictions, increasing
+the amount of training data, penalizing for model complexity, and minimizing
+the amount of information needed to describe both the model and the data''. The author opts to implement the first of these suggestions.
+
+\subsubsection{Results}
+The results of the algorithm are not particularly encouraging. Running their algorithm 100 times, the authors generate 89 trading rules. The excess return of these rules is predominantly negative (meaning that the rules did not outperform the strategy of buying and holding), and the trading frequency is low with 3.8 trades per year on average. The results are marginally better when transaction fees are lowered, and marginally worse when they are increased. \newline
+
+The author summarises, saying ``the out-of-sample test results indicate that the trading rules do not earn consistent excess returns after transaction costs. Nevertheless, they appear to have some ability to forecast daily returns.'' \newline
+
+They end with some criticisms on their algorithm, specifically that their ``parameters are not necessarily optimal'', as well as stating that ``it would be interesting to apply a similar technique to learn fundamental trading rules,'' which is what I intend to do with my algorithm.

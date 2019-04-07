@@ -1,0 +1,25 @@
+\section{Future Improvements and Investigations}
+There are several areas of the project that I would have liked to investigate further or improve upon if I had more time.
+
+\subsection{More Data}
+The most obvious upgrade to make would be to increase the size of the training data set. As mentioned in Sections \ref{expandedData} and \ref{dataIssues}, I had limits on how much data I could obtain on a daily basis, ending up with a maximum of 1350 companies worth of data. My data source, Intrinio, retains records for around 17,000 companies, meaning that I only managed to obtain approximately 8\% of their data. This means that I have missed out on a large section of the search space; these missed companies could drastically affect the payoffs of candidate screening strategies.
+
+\subsection{Co-Evolution}
+I began implementing a co-evolutionary version of my algorithm, but unfortunately did not complete it. Co-evolution is where potential solutions cooperate or compete with other solutions in order to improve their own payoff, in a more meaningful way than just competing during selection. The way a system like this would work for my algorithm, would be to split the population into n parts. There are two main alternative implementations:
+\begin{itemize}
+    \item Each sub-population represents a different species of solution. Each sub-population is initialised into a unique subsection of the search space such that members of the subpopulation are then not allowed to leave. For example, there could be as many sub-populations as there are fields, and each sub-population could force a specific rule to always be active. That rule would then be inactive in every other sub-population. These sub-populations compete by dynamically, re-sizing dependent on the average quality of the solutions they contain.
+    \item Each sub-population determines a segment of a solution. To evaluate a solution segment, it is concatenated with the best segment from every other sub-population, and then put through the stock trading game. When the algorithm ends, the best segments from each sub-population are selected and concatenated together to form one full solution. These populations are cooperating with each other, to create better solutions.
+\end{itemize}
+
+\noindent There are probably other alternatives as well. I began implementing the second of these options, but unfortunately ran out of time before I could finish it.
+
+\subsection{Screening Portfolio}
+Across the financial sector, portfolios are used in a variety of contexts, primarily to reduce risk in trading. A similar idea could be employed here, borrowing from the coevolutionary ideas. We could create portfolios of screening strategies as opposed to single screeners, where each strategy is restricted to a section of fundamental statistics. This would provide more security against risky investments than individual screeners.
+
+\subsection{Upper and Lower Bounds}
+My algorithm allows rules to take the form of an upper or a lower bound on a field. An extension of this could allow for both a lower and upper bound, allowing for more complexity in the trends that can be learned.
+
+\subsection{Trading Costs}
+My algorithm does not consider the costs attached to trading stocks. This was initially intentional in order to keep the algorithm simple as I developed it, but as I added more complexity in Section \ref{contextualising} I could not reliably source what these costs are.
+
+\section{Conclusions}

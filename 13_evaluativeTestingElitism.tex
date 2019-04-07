@@ -1,0 +1,106 @@
+\section{Testing - Standard Vs Elitism Vs Elitism-Speciation}
+The elitism method I have decided to try is conditional 1-elitism. This operation is used during the generation of a new population, as below:
+
+\begin{enumerate}
+    \item Find the best solution in the last population.
+    \item If this best solution sold more than 40 stocks, place this solution in the next population.
+    \item Fill the rest of the new population in the standard manner (select-crossover-mutate).
+\end{enumerate}
+
+\noindent The speciation method I have implemented supplements my current selection method, as detailed below:
+\begin{enumerate}
+    \item Select two members of the current population by the standard selection method.
+    \item If the two candidates share more than 25\% of their fields, select two more candidates, and repeat this step.
+    \item If the two candidates share less than 25\% of their fields, continue to the crossover function.
+\end{enumerate}
+
+\noindent For example, consider the following two screening strategies:
+\begin{itemize}
+    \item ("assetturnover", Gt, 42), ("divpayoutratio", Lt, 38), ("ebit", Gt, 42), ("ebitqoqgrowth", Gt, 38), ("epsqoqgrowth", Gt, 46), ("nopatgrowth", Gt, 46), ("preferredtocap", Lt, 34), ("taxburdenpct", Lt, 38)
+    \item ("assetturnover", Gt, 42), ("divpayoutratio", Lt, 38), ("ebit", Gt, 42), ("faturnover", Gt, 48), ("taxburdenpct", Lt, 38)
+\end{itemize}
+
+\noindent These strategies share four fields: \bf assetturnover\rm, \bf divpayoutratio\rm, \bf ebit\rm, and \bf taxburdenpct\rm. They have five fields between them that are not shared: \bf ebitqoqgrowth\rm, \bf epsqoqgrowth\rm, \bf nopatgrowth\rm, \bf preferredtocap\rm, and \bf faturnover\rm. This means $\frac{4}{4 + 5} = 44\% $ shared fields. \newline
+
+To examine whether these methods have improved the screening strategies that the algorithm provides, I ran the algorithm 50 times for each of the three configurations: the default algorithm, algorithm with elitism, and algorithm with elitism and speciation, using the following parameter settings:
+\begin{itemize}
+    \item Number of Generations = 12
+    \item Number of Iterations = 2
+    \item Population Size = 175
+    \item Percentile Data Spread = Gap of 2 between percentiles (2nd, 4th, ..., 100th)
+\end{itemize}
+
+\clearpage
+
+\begin{figure}[p]
+    \vspace{-25mm}
+    {\centering
+    \pgfplotstabletypeset[
+      columns/run/.style={column name=Run Number},
+      columns/default/.style={column name=Default},
+      columns/elitism/.style={column name=Elitism},
+      columns/elitism-speciation/.style={column name=Elitism \& Speciation},
+    ]{tables/DvsEvES.txt}\\}
+\end{figure}
+
+\begin{figure}[h]
+    \setlength{\parindent}{24pt}
+    The 50 results for each configuration were ordered before plotting, to expose the different distributions of annual profits between the three tests. \newline
+
+    {\centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={Run Number},
+            ylabel={Annual Profit (\%)},
+            legend pos=south east,
+            legend entries={Default,Elitism,Elitism-Speciation},
+        ]
+        \addplot table [mark=none,x=run,y=default] {tables/DvsEvES.txt};
+        \addplot table [mark=none,x=run,y=elitism] {tables/DvsEvES.txt};
+        \addplot table [mark=none,x=run,y=elitism-speciation] {tables/DvsEvES.txt};
+        \end{axis}
+    \end{tikzpicture}\\}
+    \vspace{3mm}
+    
+    The default algorithm performs the worst out of the three tests, as expected. Its annual profit is linearly increasing across the first 35 runs, before quickly attaining the ceiling result of 18.3\%. \newline
+    
+    Elitism performs the best, with an annual profit strictly above the default configuration after the first 5 results. Profit increases in a non-linear fashion for the first 25 results, before suddenly attaining the ceiling value. \newline
+    
+    Elitism \& Speciation performs worse than the default strategy at low profits (below 6\%), but then quickly improves to mirror the results for Elitism. The speciation here seems to have affected the region of profit from 5\% to 10\%. Elitism had 9 results between 5\% and 10\%, whilst Elitism \& Speciation has only 4 results. This leads to a far smoother transition from the low profits to the ceiling result.
+    
+    \subsection{Ceiling of 18.3\%}
+    The algorithm plateaus at a profit of just above 18\%, achieving an all time best result of approximately 18.3\%. This behaviour is very consistent, occuring every time the algorithm is run. \newline
+    
+    There is no obvious reason for this, but I have one potential theory. It is possible for a business to grow too quickly, so quickly that it can cause irreparable harm to the business eventually damaging the stock price and potentially in the worst case destroying the company. The video games industry is plentiful with examples of this. \newline
+     
+\end{figure}
+
+\begin{figure}[p]
+    \setlength{\parindent}{24pt}
+    Zynga (ZNGA), founded in 2007, created social games using Facebook as a platform before moving to mobile devices. They experienced rapid growth over their first three years due to the rapid success of games like Farmville and Cityville. This was followed by a collapse in their user base, losing half of their players in the next three years. \cite{zyngaPlayers} Substantial layoffs occurred in 2013 and 2014, affecting 18\% and 15\% of their employees respectively. \cite{zyngaIsKill} The business has since stabilised. \newline
+        
+    Another current example is Activision Blizzard (ATVI). Activision trades on the NASDAQ exchange which recently fell into its first bear market in 10 years. \cite{nasdaqBearIn} The exchange recovered very quickly \cite{nasdaqBearOut}, but Activision shares have not recovered from the 39\% decrease in their value over the last 6 months. \cite{actiSharePrice} This is despite record earnings in the last quarter of 2018. Prevailing opinion is that this was the result of a financial correction, caused by an overvaluation of the business due to rapid and unsustainable growth. \cite{actiCorrection} \newline
+    
+    My theory is that the algorithm is identifying the highest level of growth that it thinks can be reasonably sustained.
+    
+    \subsection{Comparing to S\&P 500}
+    In Section \ref{snpPls} I made it my aim to try to beat the yearly return of the S\&P 500 index. The data that the algorithm is training on ranges from the fourth quarter of 2008 to the first quarter of 2018, so it would be appropriate to compare my results to the yearly return of the S\&P 500 within this same time span. \newline
+    
+    During this time span, the S\&P 500 went from a value of 921.32 to 2652.85.\cite{snpValue} To calculate the yearly percentage return, we have to solve the equation:
+    
+    \begin{equation}
+        (1 + return)^{9.5} = \frac{2652.85}{921.32}
+    \end{equation}
+    
+    \begin{equation}
+        \Rightarrow return = {(\frac{2652.85}{921.32})}^{\frac{1}{9.5}} - 1 \approx 11.8\%
+    \end{equation}
+    
+    Therefore, even in the default configuration, my algorithm creates strategies that outperform the return of the S\&P 500:
+    \begin{itemize}
+        \item The default strategy beats the S\&P 500 32\% of the time.
+        \item The elitism strategy beats the S\&P 500 52\% of the time.
+        \item The elitism and speciation strategy beats the S\&P 500 50\% of the time.
+    \end{itemize}
+    
+\end{figure}

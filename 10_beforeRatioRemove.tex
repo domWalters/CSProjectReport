@@ -1,5 +1,5 @@
 \section{Testing - Do the Screeners make sense?}
-To clarify whether the Screeners that I'm getting make sense, it is necessary to understand what each of the fields in the training data mean in a business context. To accomplish this, I ran the program a number of times with different variable settings and picked the best screeners that I saw to analyse. \newline
+To clarify whether the screening strategies that the algorithm creates make sense, it is necessary to understand what each of the fields in the training data mean in a business context. To accomplish this, I ran the program a number of times with different variable settings and picked the best screeners that I saw to analyse. \newline
 
 I went through each field in turn to check that none of them contradict, and that each screen would be reasonable to apply (for example, the screener doesn't prefer low values in fields where high values are strictly better). For a full explanation of each of the terms in the following section, see \ref{intrinioFields} in the Appendix.
 
@@ -101,11 +101,11 @@ From looking through this breakdown, the algorithm creates screens that consiste
 \noindent As I have only observed this strange behaviour in one screen, I am not going to take any action at this stage, and will instead continue to monitor for potentially anomalous rules in future tests.
 
 \subsection{Further Changes}
-In order to obtain the five screens analysed above, I ran and observed my algorithm many times. One concerning thing I noticed was the rate at which the algorithm would completely fail and loop forever was remarkably high. \newline
+In order to obtain the five screens analysed above, I ran and observed my algorithm many times. One concerning thing I noticed was that the rate at which the algorithm would completely fail and loop forever was remarkably high. \newline
 
 The reason for this behaviour was from Section \ref{emptyScreen}, where I decided to prevent the algorithm from creating empty screening rules by looping the selection-crossover-mutation function until a non empty screen is produced. \newline
 
-This permanent looping was not the problem, but instead a symptom of another problem. My system of running the algorithm with a specific matching ratio (see Section \ref{testingConsequences}), and then iteratively increasing until a ratio of 1 is achieved, has a serious fundamental flaw:
+This permanent looping was not the problem, but instead a symptom of the problem. My system of running the algorithm with a specific matching ratio (see Section \ref{testingConsequences}), and then iteratively increasing until a ratio of 1 is achieved, has a serious fundamental flaw:
 \begin{itemize}
     \item Is there any reason why a screener that performs well with a 70\% match, should perform well with an 80\% match?
 \end{itemize}
@@ -114,7 +114,7 @@ I now believe the answer to this question is no. The reason that I used the matc
 
 As a reminder, each initial strategy has 50\% of its rules turned on, and 50\% turned off at random. The ratio system was used to reduce the proportion that are turned on over time, as the algorithm decided whether each field was relevant. \newline
 
-I have decided to remove this ratio system, and instead initialise each screening strategy to be a random selection of 10 fields (on average). This change has consequences to other core parts of the algorithm, for example:
+I have decided to remove this ratio system, and instead initialise each screening strategy to be a random selection of 10 fields (on average). The reasoning behind choosing a 10 field average is the same as the reason given in Section \ref{longScreeners}; In the real stock market, screening strategies often contain no more than 10 rules. This change has consequences to other core parts of the algorithm, for example:
 \begin{itemize}
     \item The change made in Section \ref{invalidField} is no longer required, as all field removal must now be done solely by evolutionary crossover and mutation.
     \item The change made in Section \ref{iterReset} is no longer needed. However, this change was implemented to lessen the impact of overfitting to the training data. This needs to be replaced with a new system:

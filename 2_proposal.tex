@@ -1,5 +1,5 @@
 \section{Project Layout}
-The project can be split into 3 core sections.
+The project can be split into three core sections.
 
 \subsection{The Simulation Game} \label{simGameProp}
 In order to train a genetic algorithm over historical data, we have to create some form of “payoff” for each of the proposed screening strategies in the population, that is representative of how much profit that strategy would create when choosing stocks to buy/sell in the real economy. \newline
@@ -33,9 +33,9 @@ I intend to begin with this generic framework, and then adapt my algorithm as ne
     \item \bf The Crossover Function \rm
 \end{itemize}
 
-This section of the system will require experimentation, as the initialisation and crossover methods will need to be specially designed for this search space. The crossover function is going to be the hardest element to construct. \newline
+This section of the system will require experimentation, as the initialisation and crossover methods will need to be specially designed for this search space. I anticipate that the crossover function is going to be the hardest element to construct. \newline
 
-It has to allow a combination of two screening rules of a hundred variables each (at a minimum), all representing different aspects of a stock (with different scales and potentially wildly different values), in such a way that the result will on average be a better screening strategy. This won't be a trivial function to design.
+It has to allow a combination of two screening rules of a hundred variables each (at a minimum), all representing different aspects of a stock (with different scales and potentially wildly different values), in such a way that the result will on average be a better screening strategy. This does not seem like a trivial task.
 
 \subsection{Testing and Experimentation}
 Once the algorithm is established and providing valid results, a series of evaluations should be run to determine the quality of the screening strategies provided. This is likely to be a highly iterative process: a test is run, an improvement suggested, the test is rerun with the improvement. \newline

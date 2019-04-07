@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[headings=optiontotoc]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[nottoc]{tocbibind}
 \usepackage{natbib}
@@ -11,6 +11,7 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{colortbl}
+\usepackage{lscape}
 
 \setcounter{section}{-1}
 
@@ -26,7 +27,7 @@
 \makeatother
 
 \begin{document}
-\include{titlepage}
+\include{-1_titlepage}
 \tableofcontents
 \include{0_abstract}
 \include{1_introduction}
@@ -41,7 +42,9 @@
 \include{10_beforeRatioRemove}
 \include{11_afterRatioRemove}
 \include{12_evaluativeTesting}
-\include{appendix}
+\include{13_evaluativeTestingElitism}
+\include{14_conclusions}
+\include{15_appendix}
 
 \bibliographystyle{unsrt}
 %\bibliographystyle{plain}

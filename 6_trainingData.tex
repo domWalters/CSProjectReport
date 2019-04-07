@@ -7,16 +7,16 @@ When it comes to actually putting test data through the algorithm, I will need f
 \subsection{Problems}
 Upon obtaining the toy data set, I immediately noticed a series of issues:
 \begin{itemize}
-    \item \bf The data is in .csv format \rm - This potentially isn't an issue, as long as the .csv libraries in Rust are sufficiently quick at reading the files. If this becomes a problem, these files can be translated into a form that is quicker to read (a standard text-file or raw byte data).
+    \item \bf The data is in .csv format \rm - Potentially this may not be an issue, so long as the .csv libraries in Rust are sufficiently quick at reading the files. If this becomes a problem, these files can be translated into a form that is quicker to read (a standard text-file or raw byte data).
     \item \bf Data on each company starts at varying times \rm - This is to be expected; not every company enters the public stock exchange at the same time. Similarly, companies may close or leave the public exchange, or for some reason data for a specific quarter may be unavailable. My solution here is to only run the algorithm over a continuous time period.
-    \item \bf Each company provides differing levels of detail \rm - Some companies provide more fields than others. The algorithm won't be able to create a screener that uses data that certain companies don't provide, that wouldn't make any sense. My initial solution is to only allow entries which every company in the data set provides; however, this could be overly limiting.
-    \item \bf The documents aren't ordered with regards to header \rm - Each file orders its header in a seemingly arbitrary fashion. If the file is read in in this state, I'd have to be able to handle data in a random order which will significantly increase the effort it takes to process the data. My solution is to sort the fields into alphabetical order. This could potentially be rather cpu intensive as it amounts to rewriting the whole file anew, but this will only need to be done once.
+    \item \bf Each company provides differing levels of detail \rm - Some companies provide more fields than others. The algorithm cannot be allowed to create a screener that uses data that certain companies do not provide; it would not make any sense. How would such a screener be applied to companies that do not provide that statistic? My initial solution is to only allow entries which every company in the data set provides. This could be overly limiting, and will need to be monitored.
+    \item \bf The documents are not ordered with regards to header \rm - Each file orders its header in a seemingly arbitrary fashion. If the file is read in in this state, the algorithm would have to be able to handle data in a random order, which will significantly increase the effort it takes to process the data. My solution is to sort the fields into alphabetical order. This could potentially be rather CPU intensive as it amounts to rewriting the whole file anew, but this will only need to be done once.
 \end{itemize}
 
 \subsection{Implementing the CSV reader} \label{DataCSVRead}
 I quickly realised that implementing the requirements I have for this .csv reader is a surprisingly non-trivial task. Specifically, to guarantee that each file has the same header set I will need to iterate over the whole collection of files and every header field in each file, to create a list of shared headers. Sorting this list would then be rather simple, tantamount to a sort of a several hundred element set. However, the files would then need to be reassembled in this new order, a task that requires each file to be iterated through as many times as there are elements in the header (although significant optimisations would be possible such as preventing access to indices that have already been used transferred to the new file). \newline
 
-It's not viable to run this every time the algorithm is run; the impact on run-time would be unacceptable. Therefore, I elected to write an entirely separate program that fixes all of the issues I listed, and creates a new set of .csv files. This means that the files can be fixed once, and then the new set of files can be indefinitely reused at no further cost to system performance, by following two assumptions:
+It is not viable to run this every time the algorithm is run; the impact on run-time would be unacceptable. Therefore, I elected to write an entirely separate program that fixes all of the issues I listed, and creates a new set of .csv files. This means that the files can be fixed once, and then the new set of files can be indefinitely reused at no further cost to system performance, by following two assumptions:
 \begin{itemize}
     \item \bf Every file has the same header, in the same order (alphanumerical ascending). \rm
     \item \bf The data is row continuous by date and quarter (i.e. there are no missing quarters). \rm
@@ -24,17 +24,17 @@ It's not viable to run this every time the algorithm is run; the impact on run-t
 
 However, before implementing this system, I need to choose where to source my expanded data set from to ensure that my effort in creating this sub-program isn't wasted (for example, if the expanded data set is formatted in a different way I may need to substantially change this formatting program).
 
-\subsection{Expanded Data Set}
+\subsection{Expanded Data Set} \label{expandedData}
 I am obtaining the expanded data set from the Intrinio API \cite{intrinioApi}. Intrinio is a company that provides access to stock market information, both current and historical, on a free and premium account basis. I am using a premium account owned by my supervisor, and an unofficial Python SDK for the V1.0 of this API \cite{intrinioPython}. \newline
 
 The account allows 5000 calls to the API each day, which allows me to pull .csv files containing the data on around 40-50 companies. My intention is to do this every day for the duration of the project. Then I put all of the files I've collected so far through the .csv formatter, and make these files available to all of the other students doing projects with my supervisor. \newline
 
 In this way, whilst I am using the entire account limit every day, I am not preventing other students accessing the data it provides.
 
-\subsection{Issues}
+\subsection{Issues} \label{dataIssues}
 Due to my method of obtaining data, I can only get so much per day. This provides an upper limit to the amount of training data I will be able to obtain over the duration of the project. As a result, my data set increased in size over the course of the project. Specifically:
 \begin{itemize}
     \item During Chapter \ref{functTests} my data set consisted of around 100 companies, with data from a period of 10 years.
-    \item During Chapter \ref{contextualising} my data set consisted of around 750 companies, with data from a period of 9.25 years.
-    \item During Chapter \ref{actualTesting} my data set consisted of around 1350 companies, with data from a period of 9.25 years.
+    \item During Chapter \ref{contextualising} my data set consisted of around 750 companies, with data from a period of 9.5 years.
+    \item After Chapter \ref{contextualising} my data set consisted of around 1350 companies, with data from a period of 9.5 years.
 \end{itemize}
